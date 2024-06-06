@@ -33,7 +33,22 @@ class _TreeWidgetState extends State<TreeWidget> {
 
   Widget _getTrailingIconByNodeStatusOrSensorType(
       String? nodeStatus, String? nodeSensor) {
-    if (nodeStatus == 'alert') {
+    if (nodeStatus == 'alert' && nodeSensor == 'energy') {
+      return const Row(
+        children: [
+          Icon(
+            Icons.circle,
+            color: Color.fromRGBO(237, 56, 51, 1),
+            size: 10,
+          ),
+          Icon(
+            Icons.bolt,
+            color: Color.fromRGBO(82, 196, 26, 1),
+            size: 20,
+          )
+        ],
+      );
+    } else if (nodeStatus == 'alert') {
       return const Icon(
         Icons.circle,
         color: Color.fromRGBO(237, 56, 51, 1),
