@@ -10,8 +10,91 @@ class TreeStore extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isEnergySensorFilterOn = false.obs;
   RxBool isCriticStatusFilterOn = false.obs;
+  RxString onChangedSearchString = ''.obs;
 
-  ordenateTreeNode() {
+  ordenateTreeNodeByCriticStatus() {
+    isLoading.value = true;
+    isCriticStatusFilterOn.value = !isCriticStatusFilterOn.value;
+    if (isCriticStatusFilterOn.value) {
+      filteredTreeNodes.value = _filterTreeNodesByCriticStatus(treeNodes);
+    } else {
+      filteredTreeNodes.value = treeNodes;
+    }
+    isLoading.value = false;
+  }
+
+  ordenateTreeNodeByEnergySensorType() {
+    isLoading.value = true;
+    isEnergySensorFilterOn.value = !isEnergySensorFilterOn.value;
+    if (isEnergySensorFilterOn.value) {
+      filteredTreeNodes.value = _filterTreeNodesByEnergySensor(treeNodes);
+    } else {
+      filteredTreeNodes.value = treeNodes;
+    }
+    isLoading.value = false;
+  }
+
+  ordenateTreeNodeByTitle() {
+    isLoading.value = true;
+    if (onChangedSearchString.value == '') {
+      filteredTreeNodes.value = treeNodes;
+    } else {
+      filteredTreeNodes.value = _filterTreeNodesByTitle(treeNodes);
+    }
+    isLoading.value = false;
+  }
+
+  List<TreeNodeModel> _filterTreeNodesByTitle(List<TreeNodeModel> nodes) {
+    List<TreeNodeModel> filteredNodes = [];
+
+    for (var node in nodes) {
+      List<TreeNodeModel> filteredChildren =
+          _filterTreeNodesByTitle(node.children);
+      if (filteredChildren.isNotEmpty ||
+          node.title
+              .toLowerCase()
+              .contains(onChangedSearchString.value.toLowerCase())) {
+        node.children = filteredChildren;
+        filteredNodes.add(node);
+      }
+    }
+
+    return filteredNodes;
+  }
+
+  List<TreeNodeModel> _filterTreeNodesByEnergySensor(
+      List<TreeNodeModel> nodes) {
+    List<TreeNodeModel> filteredNodes = [];
+
+    for (var node in nodes) {
+      List<TreeNodeModel> filteredChildren =
+          _filterTreeNodesByEnergySensor(node.children);
+      if (filteredChildren.isNotEmpty || node.sensorType == "energy") {
+        node.children = filteredChildren;
+        filteredNodes.add(node);
+      }
+    }
+
+    return filteredNodes;
+  }
+
+  List<TreeNodeModel> _filterTreeNodesByCriticStatus(
+      List<TreeNodeModel> nodes) {
+    List<TreeNodeModel> filteredNodes = [];
+
+    for (var node in nodes) {
+      List<TreeNodeModel> filteredChildren =
+          _filterTreeNodesByCriticStatus(node.children);
+      if (filteredChildren.isNotEmpty || node.status == "alert") {
+        node.children = filteredChildren;
+        filteredNodes.add(node);
+      }
+    }
+
+    return filteredNodes;
+  }
+
+  _ordenateTreeNode() {
     final Map<String, TreeNodeModel> nodeMap = {
       for (var node in treeNodes) node.id: node
     };
@@ -32,10 +115,16 @@ class TreeStore extends GetxController {
     isLoading.value = false;
   }
 
-  getLocations(companyId) async {
-    List<TreeNodeModel> locationsList = [];
+  initView(companyId) {
+    isEnergySensorFilterOn.value = false;
+    isCriticStatusFilterOn.value = false;
     isLoading.value = true;
     treeNodes.clear();
+    getLocations(companyId);
+  }
+
+  getLocations(companyId) async {
+    List<TreeNodeModel> locationsList = [];
     var data = await companyController.getCompanyLocations(companyId);
     locationsList = data.map((json) => TreeNodeModel.fromJson(json)).toList();
     treeNodes.addAll(locationsList);
@@ -50,6 +139,6 @@ class TreeStore extends GetxController {
       asset.nodeType = TreeNodeModel.setTreeNodeType(asset);
     }
     treeNodes.addAll(assetsList);
-    ordenateTreeNode();
+    _ordenateTreeNode();
   }
 }

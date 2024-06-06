@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_protected_member
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tractian_mobile_challange/core/store/tree_store.dart';
@@ -14,7 +16,7 @@ class AssetsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TreeStore store = Get.put(TreeStore());
-    store.getLocations(companyId);
+    store.initView(companyId);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -26,78 +28,88 @@ class AssetsView extends StatelessWidget {
             ),
           ),
         ),
-        body: Obx(() => store.isLoading.value
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.blue,
-                ),
-              )
-            : Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 16,
-                      right: 16,
-                      left: 16,
-                      bottom: 8,
-                    ),
-                    child: TextField(
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 6, horizontal: 16),
-                        hintText: 'Buscar Ativo ou Local',
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
-                          height: 20 / 14,
-                          color: Color.fromRGBO(142, 152, 163, 1),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: const Color.fromRGBO(234, 239, 243, 1),
-                        prefixIcon: Container(
-                          margin: const EdgeInsets.only(right: 8, left: 16.75),
-                          child: const Icon(
-                            Icons.search,
-                            size: 20,
-                            color: Colors.grey,
+        body: Obx(
+          () => store.isLoading.value
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.blue,
+                  ),
+                )
+              : Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 16,
+                        right: 16,
+                        left: 16,
+                        bottom: 8,
+                      ),
+                      child: TextField(
+                        onChanged: (value) {
+                          store.onChangedSearchString.value = value;
+                        },
+                        onSubmitted: (_) => store.ordenateTreeNodeByTitle(),
+                        onTapOutside: (_) => store.ordenateTreeNodeByTitle(),
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 6, horizontal: 16),
+                          hintText: 'Buscar Ativo ou Local',
+                          hintStyle: const TextStyle(
+                            fontSize: 14,
+                            height: 20 / 14,
+                            color: Color.fromRGBO(142, 152, 163, 1),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: const Color.fromRGBO(234, 239, 243, 1),
+                          prefixIcon: Container(
+                            margin:
+                                const EdgeInsets.only(right: 8, left: 16.75),
+                            child: const Icon(
+                              Icons.search,
+                              size: 20,
+                              color: Colors.grey,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: Obx(
-                        () => Row(
-                          children: [
-                            CustomElevatedButton(
-                              onPressed: () {},
-                              icon: Icons.bolt_outlined,
-                              text: 'Sensor de Energia',
-                              isEnabled: store.isEnergySensorFilterOn.value,
-                            ),
-                            const SizedBox(width: 8),
-                            CustomElevatedButton(
-                              onPressed: () {},
-                              icon: Icons.error_outline,
-                              text: 'Crítico',
-                              isEnabled: store.isCriticStatusFilterOn.value,
-                            ),
-                          ],
-                        ),
-                      )),
-                  const Divider(),
-                  Expanded(
-                    child: TreeWidget(
-                      nodes: store.filteredTreeNodes.value,
+                    Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Obx(
+                          () => Row(
+                            children: [
+                              CustomElevatedButton(
+                                onPressed: () =>
+                                    store.ordenateTreeNodeByEnergySensorType(),
+                                icon: Icons.bolt_outlined,
+                                text: 'Sensor de Energia',
+                                isEnabled: store.isEnergySensorFilterOn.value,
+                              ),
+                              const SizedBox(width: 8),
+                              CustomElevatedButton(
+                                onPressed: () =>
+                                    store.ordenateTreeNodeByCriticStatus(),
+                                icon: Icons.error_outline,
+                                text: 'Crítico',
+                                isEnabled: store.isCriticStatusFilterOn.value,
+                              ),
+                            ],
+                          ),
+                        )),
+                    const Divider(),
+                    Expanded(
+                      child: TreeWidget(
+                        nodes: store.filteredTreeNodes.value,
+                      ),
                     ),
-                  ),
-                ],
-              )),
+                  ],
+                ),
+        ),
       ),
     );
   }
