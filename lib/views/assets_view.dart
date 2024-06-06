@@ -88,7 +88,7 @@ class AssetsView extends StatelessWidget {
                   const Divider(),
                   Expanded(
                     child: TreeWidget(
-                      nodes: store.treeNodes.value,
+                      nodes: store.filteredTreeNodes.value,
                     ),
                   ),
                 ],
