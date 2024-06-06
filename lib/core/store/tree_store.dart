@@ -8,6 +8,8 @@ class TreeStore extends GetxController {
   List<TreeNodeModel> treeNodes = [];
   RxList<dynamic> filteredTreeNodes = [].obs;
   RxBool isLoading = false.obs;
+  RxBool isEnergySensorFilterOn = false.obs;
+  RxBool isCriticStatusFilterOn = false.obs;
 
   ordenateTreeNode() {
     final Map<String, TreeNodeModel> nodeMap = {

@@ -27,8 +27,10 @@ class AssetsView extends StatelessWidget {
           ),
         ),
         body: Obx(() => store.isLoading.value
-            ? Center(
-                child: CircularProgressIndicator(),
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.blue,
+                ),
               )
             : Column(
                 children: [
@@ -68,23 +70,26 @@ class AssetsView extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Row(
-                      children: [
-                        CustomElevatedButton(
-                          onPressed: () {},
-                          icon: Icons.bolt_outlined,
-                          text: 'Sensor de Energia',
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Obx(
+                        () => Row(
+                          children: [
+                            CustomElevatedButton(
+                              onPressed: () {},
+                              icon: Icons.bolt_outlined,
+                              text: 'Sensor de Energia',
+                              isEnabled: store.isEnergySensorFilterOn.value,
+                            ),
+                            const SizedBox(width: 8),
+                            CustomElevatedButton(
+                              onPressed: () {},
+                              icon: Icons.error_outline,
+                              text: 'Crítico',
+                              isEnabled: store.isCriticStatusFilterOn.value,
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        CustomElevatedButton(
-                          onPressed: () {},
-                          icon: Icons.error_outline,
-                          text: 'Crítico',
-                        ),
-                      ],
-                    ),
-                  ),
+                      )),
                   const Divider(),
                   Expanded(
                     child: TreeWidget(

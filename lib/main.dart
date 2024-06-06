@@ -13,6 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Stock Managment',
       theme: ThemeData(
+        listTileTheme: const ListTileThemeData(
+          horizontalTitleGap: 6,
+        ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Color.fromRGBO(23, 25, 45, 1),
           iconTheme: IconThemeData(color: Colors.white),

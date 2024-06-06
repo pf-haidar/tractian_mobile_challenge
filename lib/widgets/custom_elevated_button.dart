@@ -18,19 +18,29 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
-        backgroundColor: Colors.blue,
+        shape: RoundedRectangleBorder(
+          side: isEnabled
+              ? BorderSide.none
+              : const BorderSide(color: Color.fromRGBO(216, 223, 230, 1)),
+          borderRadius: BorderRadius.circular(3),
+        ),
+        backgroundColor:
+            isEnabled ? const Color.fromRGBO(33, 136, 255, 1) : Colors.white,
       ),
       child: Row(
         children: [
           Icon(
             icon,
-            color: Colors.white,
+            color: isEnabled
+                ? Colors.white
+                : const Color.fromRGBO(119, 129, 140, 1),
           ),
           Text(
             text,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: isEnabled
+                  ? Colors.white
+                  : const Color.fromRGBO(119, 129, 140, 1),
             ),
           )
         ],

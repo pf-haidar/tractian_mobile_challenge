@@ -10,10 +10,6 @@ Utilizar qualquer biblioteca que achar essências, exceto para o Asset Tree e UI
 [ ] Refatorar realizando componentização
 [ ] Criar Repository Interface? (Para evitar que os estados declarem controller)
 [ ] Alterar o for por for in (Deveria usar um while para performance?)
-
-
-[ ] Se possui parentId, já crio o nodePai pra posteriormente adicionar o resto dos dados.
-
-// Onde paramos --->
-consigo relacionar todos os objetos de nível um.
-Porém quando preciso adiconar um componente ao objeto de nivel 2, ocorre falha.
+[ ] Alterar as cores
+[ ] Alterar fontes?
+[ ] Padding dinamico?
