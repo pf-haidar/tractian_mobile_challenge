@@ -7,13 +7,9 @@ class CompanyStore extends GetxController {
 
   var companiesList = [].obs;
 
-  //TODO adicionar tratativas de erro HTTP na view
-
   getCompanies() async {
     var data = await companyController.getCompanies();
     companiesList.value =
         data.map((json) => CompanyModel.fromJson(json)).toList();
-
-        print('EXECUTOU');
   }
 }
