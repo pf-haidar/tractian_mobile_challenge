@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tractian_mobile_challange/core/controller/company_controller.dart';
 import 'package:tractian_mobile_challange/core/models/tree_node_model.dart';
@@ -10,7 +11,21 @@ class TreeStore extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isEnergySensorFilterOn = false.obs;
   RxBool isCriticStatusFilterOn = false.obs;
+
+  final textSearchInputController = TextEditingController();
   RxString onChangedSearchString = ''.obs;
+
+  @override
+  void onInit() {
+    textSearchInputController.addListener(() {
+      onChangedSearchString.value = textSearchInputController.text;
+    });
+
+    debounce(onChangedSearchString, (_) {
+      ordenateTreeNodeByTitle();
+    }, time: const Duration(seconds: 2));
+    super.onInit();
+  }
 
   ordenateTreeNodeByCriticStatus() {
     isLoading.value = true;

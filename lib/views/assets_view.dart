@@ -1,5 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tractian_mobile_challange/core/store/tree_store.dart';
@@ -15,6 +17,7 @@ class AssetsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Timer? _debounce;
     TreeStore store = Get.put(TreeStore());
     store.initView(companyId);
     return SafeArea(
@@ -45,9 +48,9 @@ class AssetsView extends StatelessWidget {
                         bottom: 8,
                       ),
                       child: TextField(
-                        onChanged: (value) {
-                          store.onChangedSearchString.value = value;
-                        },
+                        controller: store.textSearchInputController,
+                        onChanged: (value) =>
+                            store.onChangedSearchString.value = value,
                         onSubmitted: (_) => store.ordenateTreeNodeByTitle(),
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
@@ -65,6 +68,19 @@ class AssetsView extends StatelessWidget {
                           ),
                           filled: true,
                           fillColor: const Color.fromRGBO(234, 239, 243, 1),
+                          suffixIcon: store.onChangedSearchString.value == ''
+                              ? null
+                              : IconButton(
+                                  icon: const Icon(
+                                    Icons.clear,
+                                    size: 20,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    store.textSearchInputController.clear();
+                                    store.ordenateTreeNodeByTitle();
+                                  },
+                                ),
                           prefixIcon: Container(
                             margin:
                                 const EdgeInsets.only(right: 8, left: 16.75),
