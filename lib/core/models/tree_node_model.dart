@@ -9,6 +9,7 @@ class TreeNodeModel {
   String? sensorType;
   String? status;
   String? locationId;
+  bool isExpanded;
 
   TreeNodeModel({
     required this.id,
@@ -19,6 +20,7 @@ class TreeNodeModel {
     this.sensorType,
     this.status,
     this.locationId,
+    this.isExpanded = false,
   });
 
   factory TreeNodeModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,20 @@ class TreeNodeModel {
       sensorType: json['sensorType'] as String?,
       status: json['status'] as String?,
       locationId: json['locationId'] as String?,
+    );
+  }
+
+  TreeNodeModel copyWith({List<TreeNodeModel>? children}) {
+    return TreeNodeModel(
+      id: id,
+      title: title,
+      parentId: parentId,
+      nodeType: nodeType,
+      sensorType: sensorType,
+      status: status,
+      locationId: locationId,
+      isExpanded: true,
+      children: children ?? this.children,
     );
   }
 

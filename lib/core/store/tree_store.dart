@@ -15,6 +15,7 @@ class TreeStore extends GetxController {
   ordenateTreeNodeByCriticStatus() {
     isLoading.value = true;
     isCriticStatusFilterOn.value = !isCriticStatusFilterOn.value;
+    isEnergySensorFilterOn.value = false;
     if (isCriticStatusFilterOn.value) {
       filteredTreeNodes.value = _filterTreeNodesByCriticStatus(treeNodes);
     } else {
@@ -26,6 +27,7 @@ class TreeStore extends GetxController {
   ordenateTreeNodeByEnergySensorType() {
     isLoading.value = true;
     isEnergySensorFilterOn.value = !isEnergySensorFilterOn.value;
+    isCriticStatusFilterOn.value = false;
     if (isEnergySensorFilterOn.value) {
       filteredTreeNodes.value = _filterTreeNodesByEnergySensor(treeNodes);
     } else {
@@ -36,26 +38,29 @@ class TreeStore extends GetxController {
 
   ordenateTreeNodeByTitle() {
     isLoading.value = true;
+    isCriticStatusFilterOn.value = false;
+    isEnergySensorFilterOn.value = false;
     if (onChangedSearchString.value == '') {
       filteredTreeNodes.value = treeNodes;
     } else {
-      filteredTreeNodes.value = _filterTreeNodesByTitle(treeNodes);
+      filteredTreeNodes.value =
+          _filterTreeNodesByTitle(treeNodes, onChangedSearchString.value);
     }
     isLoading.value = false;
   }
 
-  List<TreeNodeModel> _filterTreeNodesByTitle(List<TreeNodeModel> nodes) {
+  List<TreeNodeModel> _filterTreeNodesByTitle(
+      List<TreeNodeModel> nodes, String searchString) {
     List<TreeNodeModel> filteredNodes = [];
 
     for (var node in nodes) {
       List<TreeNodeModel> filteredChildren =
-          _filterTreeNodesByTitle(node.children);
-      if (filteredChildren.isNotEmpty ||
-          node.title
-              .toLowerCase()
-              .contains(onChangedSearchString.value.toLowerCase())) {
-        node.children = filteredChildren;
-        filteredNodes.add(node);
+          _filterTreeNodesByTitle(node.children, searchString);
+
+      if (node.title.toLowerCase().contains(searchString.toLowerCase())) {
+        filteredNodes.add(node.copyWith(children: node.children));
+      } else if (filteredChildren.isNotEmpty) {
+        filteredNodes.add(node.copyWith(children: filteredChildren));
       }
     }
 

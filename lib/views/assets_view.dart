@@ -49,7 +49,6 @@ class AssetsView extends StatelessWidget {
                           store.onChangedSearchString.value = value;
                         },
                         onSubmitted: (_) => store.ordenateTreeNodeByTitle(),
-                        onTapOutside: (_) => store.ordenateTreeNodeByTitle(),
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(

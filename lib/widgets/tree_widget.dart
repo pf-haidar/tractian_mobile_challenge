@@ -77,10 +77,9 @@ class _TreeWidgetState extends State<TreeWidget> {
         return Padding(
           padding: EdgeInsets.only(left: _getPadding(treeLevel)),
           child: ListTile(
+            key: ValueKey(node.id),
             minTileHeight: 30,
             leading: treeLevel == 0 ? null : const SizedBox(),
-            // contentPadding:
-            //     treeLevel == 0 ? null : const EdgeInsets.only(left: 16),
             title: Row(
               children: [
                 _getIconImageByNodeType(node.nodeType),
@@ -140,28 +139,29 @@ class CustomExpandedTile extends StatefulWidget {
 }
 
 class _CustomExpandedTileState extends State<CustomExpandedTile> {
-  bool isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: widget.treeLevelPadding),
       child: ExpansionTile(
+        key: Key(widget.node.id),
         minTileHeight: 30,
+        initiallyExpanded: widget.node.isExpanded,
         tilePadding: widget.treeLevelPadding == 8
             ? const EdgeInsets.only(left: 7)
             : null,
-        onExpansionChanged: (value) => setState(() {
-          isExpanded = value;
-        }),
+        onExpansionChanged: (value) {
+          widget.node.isExpanded = value;
+          setState(() {});
+        },
         shape: const Border(),
-        leading: isExpanded
-            ? const Icon(
+        leading: widget.node.isExpanded
+            ? Icon(
                 Icons.expand_less,
                 size: 24,
                 color: Color.fromRGBO(23, 25, 45, 1),
               )
-            : const Icon(
+            : Icon(
                 Icons.expand_more,
                 size: 24,
                 color: Color.fromRGBO(23, 25, 45, 1),
