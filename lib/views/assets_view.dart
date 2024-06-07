@@ -47,7 +47,7 @@ class AssetsView extends StatelessWidget {
                         controller: store.textSearchInputController,
                         onChanged: (value) =>
                             store.onChangedSearchString.value = value,
-                        onSubmitted: (_) => store.ordenateTreeNodeByTitle(),
+                        onSubmitted: (_) => store.applyFilter(),
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.symmetric(
@@ -74,7 +74,7 @@ class AssetsView extends StatelessWidget {
                                   ),
                                   onPressed: () {
                                     store.textSearchInputController.clear();
-                                    store.ordenateTreeNodeByTitle();
+                                    store.applyFilter();
                                   },
                                 ),
                           prefixIcon: Container(
@@ -95,16 +95,14 @@ class AssetsView extends StatelessWidget {
                           () => Row(
                             children: [
                               CustomElevatedButton(
-                                onPressed: () =>
-                                    store.ordenateTreeNodeByEnergySensorType(),
+                                onPressed: () => store.onClickEnergyButton(),
                                 icon: Icons.bolt_outlined,
                                 text: 'Sensor de Energia',
                                 isEnabled: store.isEnergySensorFilterOn.value,
                               ),
                               const SizedBox(width: 8),
                               CustomElevatedButton(
-                                onPressed: () =>
-                                    store.ordenateTreeNodeByCriticStatus(),
+                                onPressed: () => store.onClickCriticButton(),
                                 icon: Icons.error_outline,
                                 text: 'Crítico',
                                 isEnabled: store.isCriticStatusFilterOn.value,

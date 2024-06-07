@@ -22,46 +22,49 @@ class TreeStore extends GetxController {
     });
 
     debounce(onChangedSearchString, (_) {
-      ordenateTreeNodeByTitle();
-    }, time: const Duration(seconds: 2));
+      applyFilter();
+    }, time: const Duration(milliseconds: 1500));
     super.onInit();
   }
 
-  ordenateTreeNodeByCriticStatus() {
-    isLoading.value = true;
-    isCriticStatusFilterOn.value = !isCriticStatusFilterOn.value;
-    isEnergySensorFilterOn.value = false;
-    if (isCriticStatusFilterOn.value) {
-      filteredTreeNodes.value = _filterTreeNodesByCriticStatus(treeNodes);
-    } else {
-      filteredTreeNodes.value = treeNodes;
-    }
-    isLoading.value = false;
-  }
-
-  ordenateTreeNodeByEnergySensorType() {
-    isLoading.value = true;
+  onClickEnergyButton() {
     isEnergySensorFilterOn.value = !isEnergySensorFilterOn.value;
     isCriticStatusFilterOn.value = false;
-    if (isEnergySensorFilterOn.value) {
-      filteredTreeNodes.value = _filterTreeNodesByEnergySensor(treeNodes);
-    } else {
-      filteredTreeNodes.value = treeNodes;
-    }
-    isLoading.value = false;
+    applyFilter();
   }
 
-  ordenateTreeNodeByTitle() {
-    isLoading.value = true;
-    isCriticStatusFilterOn.value = false;
+  onClickCriticButton() {
+    isCriticStatusFilterOn.value = !isCriticStatusFilterOn.value;
     isEnergySensorFilterOn.value = false;
-    if (onChangedSearchString.value == '') {
-      filteredTreeNodes.value = treeNodes;
-    } else {
+    applyFilter();
+  }
+
+  applyFilter() {
+    if (onChangedSearchString.value == '' && isCriticStatusFilterOn.value) {
+      filteredTreeNodes.value = _filterTreeNodesByCriticStatus(treeNodes);
+    } else if (onChangedSearchString.value == '' &&
+        isEnergySensorFilterOn.value) {
+      print('Entrou no apenas Energia');
+      // Apenas filtro de energia
+      filteredTreeNodes.value = _filterTreeNodesByEnergySensor(treeNodes);
+    } else if (onChangedSearchString.value != '' &&
+        !isCriticStatusFilterOn.value &&
+        !isEnergySensorFilterOn.value) {
       filteredTreeNodes.value =
           _filterTreeNodesByTitle(treeNodes, onChangedSearchString.value);
+    } else if (onChangedSearchString.value != '' &&
+        isEnergySensorFilterOn.value) {
+      List<TreeNodeModel> tempList =
+          _filterTreeNodesByTitle(treeNodes, onChangedSearchString.value);
+      filteredTreeNodes.value = _filterTreeNodesByEnergySensor(tempList);
+    } else if (onChangedSearchString.value != '' &&
+        isCriticStatusFilterOn.value) {
+      List<TreeNodeModel> tempList =
+          _filterTreeNodesByTitle(treeNodes, onChangedSearchString.value);
+      filteredTreeNodes.value = _filterTreeNodesByCriticStatus(tempList);
+    } else {
+      filteredTreeNodes.value = treeNodes;
     }
-    isLoading.value = false;
   }
 
   List<TreeNodeModel> _filterTreeNodesByTitle(
@@ -89,9 +92,10 @@ class TreeStore extends GetxController {
     for (var node in nodes) {
       List<TreeNodeModel> filteredChildren =
           _filterTreeNodesByEnergySensor(node.children);
-      if (filteredChildren.isNotEmpty || node.sensorType == "energy") {
-        node.children = filteredChildren;
-        filteredNodes.add(node);
+      if (node.sensorType == "energy") {
+        filteredNodes.add(node.copyWith(children: node.children));
+      } else if (filteredChildren.isNotEmpty) {
+        filteredNodes.add(node.copyWith(children: filteredChildren));
       }
     }
 
@@ -105,9 +109,10 @@ class TreeStore extends GetxController {
     for (var node in nodes) {
       List<TreeNodeModel> filteredChildren =
           _filterTreeNodesByCriticStatus(node.children);
-      if (filteredChildren.isNotEmpty || node.status == "alert") {
-        node.children = filteredChildren;
-        filteredNodes.add(node);
+      if (node.status == "alert") {
+        filteredNodes.add(node.copyWith(children: node.children));
+      } else if (filteredChildren.isNotEmpty) {
+        filteredNodes.add(node.copyWith(children: filteredChildren));
       }
     }
 
