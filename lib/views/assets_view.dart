@@ -102,11 +102,31 @@ class AssetsView extends StatelessWidget {
                           ),
                         )),
                     const Divider(),
-                    Expanded(
-                      child: TreeWidget(
-                        nodes: store.filteredTreeNodes.value,
-                      ),
-                    ),
+                    store.filteredTreeNodes.isEmpty
+                        ? const Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.search_off,
+                                  size: 50,
+                                ),
+                                Text(
+                                  'Nenhum resultado encontrado!',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromRGBO(23, 25, 45, 1),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Expanded(
+                            child: TreeWidget(
+                              nodes: store.filteredTreeNodes.value,
+                            ),
+                          ),
                   ],
                 ),
         ),
