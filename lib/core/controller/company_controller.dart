@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CompanyController {
-  static const apiUrl = 'https://fake-api.tractian.com'; //TODO colocar em variavel de ambiente
+  // Colocaria essa URL em ambiente, mas para facilitar teste e como ela é pública, não vi necessidade.
+  static const apiUrl = 'https://fake-api.tractian.com';
 
   Future<List<dynamic>> getCompanies() async {
     try {

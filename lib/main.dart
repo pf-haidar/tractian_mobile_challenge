@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Stock Managment',
+      title: 'Assets Managment',
       theme: ThemeData(
         listTileTheme: const ListTileThemeData(
           horizontalTitleGap: 6,

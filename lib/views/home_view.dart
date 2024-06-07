@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tractian_mobile_challange/core/store/company_store.dart';
 import 'package:tractian_mobile_challange/views/assets_view.dart';
-import 'package:tractian_mobile_challange/widgets/custom_elevated_button.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
