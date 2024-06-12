@@ -10,7 +10,7 @@ Consiste no desenvolvimento de um aplicativo contento uma TreeView para visualiz
 
 ## Vídeo do Aplicativo
 
-
+https://github.com/pf-haidar/tractian_mobile_challenge/assets/80533324/7a6b30d7-bfcb-4d52-a393-7f0955c2bd76
 
 **Versão Mínima do OS**
 
